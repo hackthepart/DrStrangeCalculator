@@ -1,4 +1,4 @@
-# DrStange Calculator
+# DrStangeCalculator
 
 A very basic calculator as your first Android app task. Order of operations is left-to-right. The logic is basically string processing. This calculator incorporates basic operations like addition, subtraction, division and multiplication. But it certainly won’t compare to any of your default mobile calculators or those available on the Google playstore.  
 So, in the words of Linus, "Go wild, fork the project, and prove your point. Show everybody that you can make improvements."
