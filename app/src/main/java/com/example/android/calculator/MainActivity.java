@@ -13,12 +13,12 @@ import android.widget.Toast;
 import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
-Button plus,minus,multiply,divide;
-TextView input_et;
-TextView result_tv;
-double a=0,res=0;
+    Button plus,minus,multiply,divide;
+    TextView input_et;
+    TextView result_tv;
+    double a=0,res=0;
     boolean set=false;
-char operation='0';
+    char operation='0';
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,20 +87,20 @@ char operation='0';
             result_tv.setText(""+res);
             set=true;
         }
-      //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-      //  a=Float.parseFloat(input_et.getText().toString());
+        //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
+        //  a=Float.parseFloat(input_et.getText().toString());
         a=0;
         operation='+';
         input_et.setText(""+a);
     }
     public void subtract(View view){
-       if(!set){
-           res=a;
-           result_tv.setText(""+res);
-           set=true;
-       }
+        if(!set){
+            res=a;
+            result_tv.setText(""+res);
+            set=true;
+        }
         //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-       // a=Float.parseFloat(input_et.getText().toString());
+        // a=Float.parseFloat(input_et.getText().toString());
         a=0;
         operation='-';
         input_et.setText(""+a);
@@ -123,7 +123,7 @@ char operation='0';
             set=true;
         }
         //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-      //  a=Float.parseFloat(input_et.getText().toString());
+        //  a=Float.parseFloat(input_et.getText().toString());
         a=0;
         operation='/';
         input_et.setText(""+a);
