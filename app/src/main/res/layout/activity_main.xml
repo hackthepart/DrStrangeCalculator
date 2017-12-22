@@ -141,15 +141,16 @@
             android:text=")"
             android:id="@+id/closeBracket"
             android:onClick="closeBracket"/>
+
         <Button
+            android:id="@+id/absolute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="|X|"
             android:background="#A9A9A9"
-            android:textColor="#ffff"
-            android:id="@+id/absolute"
-            android:onClick="absolute"/>
+            android:onClick="absolute"
+            android:text="|X|"
+            android:textColor="#ffff" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -182,14 +183,16 @@
             android:background="#A9A9A9"
             android:textColor="#ffff"
             android:onClick="value2"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="3"
             android:layout_weight="1"
             android:background="#A9A9A9"
-            android:textColor="#ffff"
-            android:onClick="value3"/>
+            android:onClick="value3"
+            android:paddingBottom="1dp"
+            android:text="3"
+            android:textColor="#ffff" />
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

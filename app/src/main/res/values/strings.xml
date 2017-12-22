@@ -4,5 +4,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">action settings</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
