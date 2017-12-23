@@ -122,7 +122,6 @@ public static char operation='0';
         }
     }
     public String correctString(String modifiedExpression){
-         modifiedExpression = expression;
         for(int i=0;i<expression.length();i++){
             if(expression.charAt(i)=='^'){
                 modifiedExpression=modifiedExpression.replace(modifiedExpression.substring(i-1,i+2),
