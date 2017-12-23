@@ -90,13 +90,6 @@ public static char operation='0';
         return super.onOptionsItemSelected(item);
     }
     public void display(View view) throws ScriptException {
-        String modifiedExpression = expression;
-        for(int i=0;i<expression.length();i++){
-            if(expression.charAt(i)=='^'){
-               modifiedExpression=modifiedExpression.replace(modifiedExpression.substring(i-1,i+2),
-                       "Math.pow("+modifiedExpression.charAt(i-1)+","+modifiedExpression.charAt(i+1)+")");
-            }
-        }
         switch(operation){
             case '+':
                 res+=a;
@@ -115,9 +108,11 @@ public static char operation='0';
             default:
                 break;
         }
+
         try {
+
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
-            res = (double) engine.eval(modifiedExpression);
+            res = (double) engine.eval(correctString(expression));
             a = res;
             result_tv.setText("" + res);
             input_et.setText("0.0");
@@ -125,6 +120,16 @@ public static char operation='0';
         catch (Exception e){
             return;
         }
+    }
+    public String correctString(String modifiedExpression){
+         modifiedExpression = expression;
+        for(int i=0;i<expression.length();i++){
+            if(expression.charAt(i)=='^'){
+                modifiedExpression=modifiedExpression.replace(modifiedExpression.substring(i-1,i+2),
+                        "Math.pow("+modifiedExpression.charAt(i-1)+","+modifiedExpression.charAt(i+1)+")");
+            }
+        }
+        return modifiedExpression;
     }
 
     public void addToMemory(View view){
