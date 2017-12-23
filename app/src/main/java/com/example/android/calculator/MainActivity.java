@@ -6,6 +6,7 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -90,6 +91,13 @@ public static char operation='0';
         return super.onOptionsItemSelected(item);
     }
     public void display(View view) throws ScriptException {
+        String modifiedExpression = expression;
+        for(int i=0;i<expression.length();i++){
+            if(expression.charAt(i)=='^'){
+               modifiedExpression=modifiedExpression.replace(modifiedExpression.substring(i-1,i+2),
+                       "Math.pow("+modifiedExpression.charAt(i-1)+","+modifiedExpression.charAt(i+1)+")");
+            }
+        }
         switch(operation){
             case '+':
                 res+=a;
@@ -110,7 +118,7 @@ public static char operation='0';
         }
         try {
             ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
-            res = (double) engine.eval(expression);
+            res = (double) engine.eval(modifiedExpression);
             a = res;
             result_tv.setText("" + res);
             input_et.setText("0.0");
@@ -139,7 +147,7 @@ public static char operation='0';
             result_tv.setText("" + res);
             a = 0;
             operation = '^';
-            expression+=" "+operation+" ";
+            expression+=operation;
 
             input_et.setText(" " + expression);
         }
@@ -151,7 +159,7 @@ public static char operation='0';
             result_tv.setText("" + res);
             //set=true;
             a = 0;
-            expression+=" ( ";
+            expression+="(";
             input_et.setText(" " + expression);
         }
 
@@ -162,7 +170,7 @@ public static char operation='0';
             result_tv.setText("" + res);
             //set=true;
             a = 0;
-            expression+=" ) ";
+            expression+=")";
             input_et.setText(" " + expression);
         }
 
@@ -188,7 +196,7 @@ public static char operation='0';
             //  a=Float.parseFloat(input_et.getText().toString());
             a=0;
             operation = '+';
-            expression+=" "+operation+" ";
+            expression+=operation;
             input_et.setText(" " + expression);
         }
     }
@@ -202,7 +210,7 @@ public static char operation='0';
            // a=Float.parseFloat(input_et.getText().toString());
            a = 0;
            operation = '-';
-           expression+=" "+operation+" ";
+           expression+=operation;
            input_et.setText(" " + expression);
        }
     }
@@ -214,7 +222,7 @@ public static char operation='0';
             //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show()
             a = 0;
             operation = '*';
-            expression+=" "+operation+" ";
+            expression+=operation;
             input_et.setText(" " + expression);
         }
     }
@@ -227,7 +235,7 @@ public static char operation='0';
             //  a=Float.parseFloat(input_et.getText().toString());
             a = 0;
             operation = '/';
-            expression+=" "+operation+" ";
+            expression+=operation;
 
             input_et.setText(" " + expression);
         }
