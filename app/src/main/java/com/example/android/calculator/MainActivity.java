@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     static String postfi;
     TextView result_tv;
     double a = 0, res = 0;
+    boolean set = false;
     char operation = '0';
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
