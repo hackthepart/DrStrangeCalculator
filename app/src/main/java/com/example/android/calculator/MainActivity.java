@@ -1,71 +1,49 @@
 package com.example.android.calculator;
 
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import android.widget.TextView;
-
-
-
-
-
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-
-
+import android.widget.Toast;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
-    private ShakerMethod mShakeDetector;
-Button plus,minus,multiply,divide;
-public static  TextView input_et;
-public static TextView result_tv;
-    double res=0,a=0,previousAnswer=0;
-   // boolean set=false;
-public static char operation='0';
-    public static String expression;
-
-
+    Button plus, minus, multiply, divide, power;
+    TextView input_et;
+    String str="";
+    static String postfi;
+    TextView result_tv;
+    double a = 0, res = 0;
+    boolean set = false;
+    char operation = '0';
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mAccelerometer = mSensorManager
-                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mShakeDetector = new ShakerMethod();
-        mShakeDetector.setOnShakeListener(new ShakerMethod.OnShakeListener() {
-
-            @Override
-            public void onShake(int count) {
-                handleShakeEvent(count);
-            }
-        });
-        expression="";
         setContentView(R.layout.activity_main);
-        plus=(Button)findViewById(R.id.add);
-        minus=(Button)findViewById(R.id.subtract);
-        multiply=(Button)findViewById(R.id.multiply);
-        divide=(Button)findViewById(R.id.divide);
-        input_et=(TextView)findViewById(R.id.input_et);
-        result_tv=(TextView)findViewById(R.id.result_tv);
-    }
-    public void handleShakeEvent(int count){
-        input_et.setText("0.0");
-        result_tv.setText("0.0");
-        expression="";
+        plus = (Button) findViewById(R.id.add);
+        minus = (Button) findViewById(R.id.subtract);
+        multiply = (Button) findViewById(R.id.multiply);
+        divide = (Button) findViewById(R.id.divide);
+        power = (Button) findViewById(R.id.power);
+        input_et = (TextView) findViewById(R.id.input_et);
+        result_tv = (TextView) findViewById(R.id.result_tv);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -89,227 +67,224 @@ public static char operation='0';
 
         return super.onOptionsItemSelected(item);
     }
-    public void display(View view) throws ScriptException {
-        switch(operation){
-            case '+':
-                res+=a;
-                break;
-            case '-':
-                res-=a;
-                break;
-            case '*':
-                res*=a;
-                break;
-            case '/':
-                res/=a;
-                break;
-            case '^':
-                res=Math.pow(res,a);
-            default:
-                break;
-        }
-        try {
-            ScriptEngine engine = new ScriptEngineManager().getEngineByName("rhino");
-            res = (double) engine.eval(expression);
-            a = res;
-            result_tv.setText("" + res);
-            input_et.setText("0.0");
-        }
-        catch (Exception e){
-            return;
-        }
+
+    public void display(View view) {
+        Double xe =  EvaluateString.evaluate(str);
+        Toast.makeText(MainActivity.this,postfi,Toast.LENGTH_LONG).show();
+        result_tv.setText("" + xe);
     }
 
-    public void addToMemory(View view){
-        expression="";
-        previousAnswer=res;
-        result_tv.setText("Previous Answer "+previousAnswer);
-        res=0;
-        input_et.setText(Double.toString(res));
-    }
-    public void subtractFromMemory(View view){
-        expression+= previousAnswer+" ";
-        input_et.setText(expression);
+    public void clear(View view) {
+        res = 0;
+        a = 0;
+        set = false;
+        operation = '0';
+        result_tv.setText("" + res);
+        input_et.setText("");
+        str="";
     }
 
-
-    public void power(View view){
-        if(!(expression.charAt(expression.length()-1)=='^')) {
-            res = a;
-            result_tv.setText("" + res);
-            a = 0;
-            operation = '^';
-            expression+=" "+operation+" ";
-
-            input_et.setText(" " + expression);
-        }
-
-    }
-    public void openBrace(View view){
-        if(!(expression.charAt(expression.length()-1)=='(')) {
-            res = a;
-            result_tv.setText("" + res);
-            //set=true;
-            a = 0;
-            expression+=" ( ";
-            input_et.setText(" " + expression);
-        }
-
-    }
-    public void closeBrace(View view){
-        if(!(expression.charAt(expression.length()-1)==')')) {
-            res = a;
-            result_tv.setText("" + res);
-            //set=true;
-            a = 0;
-            expression+=" ) ";
-            input_et.setText(" " + expression);
-        }
-
+    public void add(View view) {
+        //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
+        //  a=Float.parseFloat(input_et.getText().toString());
+        operation = '+';
+        str=str+operation;
+        input_et.setText(str);
     }
 
+    public void subtract(View view) {
+        //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
+        // a=Float.parseFloat(input_et.getText().toString());
+        operation = '-';
+        str=str+operation;
+        input_et.setText(str);
+    }
 
-    public void clear(View view){
-        res=0;
-        a=0;
-        expression="";
-        //set=false;
-        operation= '0';
-        result_tv.setText(""+res);
-        input_et.setText(" "+expression);
+    public void multiply(View view) {
+        //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show()
+        operation = '*';
+        str=str+operation;
+        input_et.setText(str);
     }
-    public void add(View view){
-        if(!(expression.charAt(expression.length()-1)=='+')) {
-            res = a;
-            result_tv.setText("" + res);
-            //set=true;
 
-            //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-            //  a=Float.parseFloat(input_et.getText().toString());
-            a=0;
-            operation = '+';
-            expression+=" "+operation+" ";
-            input_et.setText(" " + expression);
-        }
+    public void divide(View view) {
+        //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
+        //  a=Float.parseFloat(input_et.getText().toString());
+        operation = '/';
+        str=str+operation;
+        input_et.setText(str );
     }
-    public void subtract(View view){
-       if(!(expression.charAt(expression.length()-1)=='-')) {
-           res = a;
-           result_tv.setText("" + res);
-           //set=true;
 
-           //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-           // a=Float.parseFloat(input_et.getText().toString());
-           a = 0;
-           operation = '-';
-           expression+=" "+operation+" ";
-           input_et.setText(" " + expression);
-       }
+    public void power(View view) {
+        operation = '^';
+        str=str+operation;
+        input_et.setText(str);
     }
-    public void multiply(View view){
-        if(!(expression.charAt(expression.length()-1)=='*')) {
-            res = a;
-            result_tv.setText("" + res);
-            //set=true;
-            //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show()
-            a = 0;
-            operation = '*';
-            expression+=" "+operation+" ";
-            input_et.setText(" " + expression);
-        }
-    }
-    public void divide(View view){
-        if(!(expression.charAt(expression.length()-1)=='/')) {
-            res = a;
-            result_tv.setText("" + res);
-            //set=true;
-            //  Toast.makeText(this,"Plus button clicked",Toast.LENGTH_SHORT).show();
-            //  a=Float.parseFloat(input_et.getText().toString());
-            a = 0;
-            operation = '/';
-            expression+=" "+operation+" ";
 
-            input_et.setText(" " + expression);
-        }
+    public void value1(View view) {
+        str=str+"1";
+        input_et.setText(str);
     }
-    public void value1(View view){
-        //a*=10;
-        a=1;
-        expression+=(int)a;
-        input_et.setText(" "+expression);
-    }
-    public void value2(View view){
-        //a*=10;
-        a=2;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value2(View view) {
+        str=str+"2";
+        input_et.setText(str);
     }
-    public void value3(View view){
-        //a*=10;
-        a=3;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value3(View view) {
+        str=str+"3";
+        input_et.setText(str);
     }
-    public void value4(View view){
-        //a*=10;
-        a=4;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value4(View view) {
+        str=str+"4";
+        input_et.setText(str);
     }
-    public void value5(View view){
-        //a*=10;
-        a=5;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value5(View view) {
+        str=str+"5";
+        input_et.setText(str);
     }
-    public void value6(View view){
-        //a*=10;
-        a=6;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value6(View view) {
+        str=str+"6";
+        input_et.setText(str);
     }
-    public void value7(View view){
-        //a*=10;
-        a=7;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value7(View view) {
+        str=str+"7";
+        input_et.setText(str);
     }
-    public void value8(View view){
-        //a*=10;
-        a=8;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value8(View view) {
+        str=str+"8";
+        input_et.setText(str);
     }
-    public void value9(View view){
-        //a*=10;
-        a=9;
-        expression+=(int)a;
 
-        input_et.setText(" "+expression);
+    public void value9(View view) {
+        str=str+"9";
+        input_et.setText(str);
     }
-    public void value0(View view){
-        //a*=10;
-        expression+='0';
-        input_et.setText(" "+expression);
+
+    public void value0(View view) {
+        str=str+"0";
+        input_et.setText(str);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+    public void lbrace(View view)
+    {
+        str=str+"(";
+        input_et.setText(str);
+    }
+    public void rbrace(View view)
+    {
+        str=str+")";
+        input_et.setText(str);
+    }
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
     }
 
     @Override
-    public void onPause() {
-        mSensorManager.unregisterListener(mShakeDetector);
-        super.onPause();
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
+    }
+
+    public static class EvaluateString {
+        public static double evaluate(String expression) {
+            postfi = postfix.toPostfix(expression);
+            char[] tokens = postfi.toCharArray();
+
+            // Stack for numbers: 'values'
+            Stack<Double> values = new Stack<Double>();
+            for (int i = 0; i < tokens.length; i++) {
+                // Current token is a whitespace, skip it
+                if (tokens[i] == ' ')
+                    continue;
+                if (tokens[i]=='(')
+                {int j;
+                    for (j=i+1;j<tokens.length&&tokens[j]!=')';j++){
+                // Current token is a number, push it to stack for numbers
+                if (tokens[j]==' ')
+                {
+                    continue;
+                }
+                    if (tokens[j] >= '0' && tokens[j] <= '9') {
+                    StringBuffer sbuf = new StringBuffer();
+                    // There may be more than one digits in number
+                    while (j < tokens.length && tokens[j] >= '0' && tokens[j] <= '9')
+                        sbuf.append(tokens[j++]);
+                    values.push(Double.parseDouble(sbuf.toString()));
+                }
+else
+                {
+                    values.push(applyOp(tokens[j],values.pop(),values.pop()));
+                }
+                }
+                    i=j;
+                }
+                else if (tokens[i] >= '0' && tokens[i] <= '9') {
+                    StringBuffer sbuf = new StringBuffer();
+                    // There may be more than one digits in number
+                    while (i < tokens.length && tokens[i] >= '0' && tokens[i] <= '9')
+                        sbuf.append(tokens[i++]);
+                    values.push(Double.parseDouble(sbuf.toString()));
+                }
+                else
+                {
+                    values.push(applyOp(tokens[i],values.pop(),values.pop()));
+                }
+                // Top of 'values' contains result, return it\
+
+            }
+            return values.pop();
+        }
+
+        // A utility method to apply an operator 'op' on operands 'a'
+        // and 'b'. Return the result.
+        public static double applyOp(char op, double b, double a) {
+            switch (op) {
+                case '+':
+                    return a + b;
+                case '-':
+                    return a - b;
+                case '*':
+                    return a * b;
+                case '/':
+                    return a / b;
+                case '^':
+                    int i;double x=1;
+                    for (i=1;i<=b;i++)
+                        x=x*a;
+                    return x;
+            }
+            return 0;
+        }
+    }
 }
