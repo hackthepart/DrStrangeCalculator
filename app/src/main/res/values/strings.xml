@@ -1,7 +1,15 @@
 <resources>
     <string name="app_name">Calculator</string>
     <string name="title_activity_main">MainActivity</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+
+    <string-array name="NumberSystems">
+        <item>None</item>
+        <item>Binary</item>
+        <item>Decimal</item>
+        <item>Octal</item>
+        <item>Hexadecimal</item>
+    </string-array>
 </resources>
